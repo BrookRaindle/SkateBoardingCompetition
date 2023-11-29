@@ -7,14 +7,12 @@ public class Emergency extends Staff{
         this.permission = "Emergency";
         this.type = type;
     }
-
     public String getType(){
         return type;
     }
     public void setType(String type){
         this.type = type;
     }
-
     public String toString() {
         return "Staff Profile{ IDNo:" + StaffID + ", Name: " + name + ", Permissions: " + permission + "}";
     }
