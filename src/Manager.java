@@ -1,13 +1,11 @@
-public class Manager{
+public class Manager implements RegInterface {
 
     staffList = new StaffList();
     competitionList = new CompetitionList();
 
 
-    public static void main(String[] args){        
-
-
+    public Manager(String L){
+        if(){}
 
     }
-
 }

@@ -1,12 +1,11 @@
 import java.util.Date;
 
 public class Competition {
-    
+
     public String competitionName;
     public int competitionID;
     public Date date;
     public String category;
-
     public CompetitorList compList;
     public ScoreList scores;
 
@@ -30,12 +29,10 @@ public class Competition {
     public void setDate(Date x){this.date = x;}
     public void setCategory(String x){this.category = x;}
 
+    public void addScores(String c){  
 
-    public void addScores(String c){
-        
-        Score score = new Score()
-        this.scores.add(c);
-        
-        (1,2,3,4,5)
+        Score score = new Score();
+        this.scores.;
+    
     }
 }
