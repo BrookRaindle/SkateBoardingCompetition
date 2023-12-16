@@ -1,26 +1,23 @@
-public class Staff {
-    public int StaffID;
-    public Name name;
+class Staff {
+    private int staffId;
+    private Name name;
+    private String permissionLevel;
 
-    public Staff(int StaffID, Name name) {
-        this.StaffID = StaffID;
-        this.name = name;
-    }
-    public void setStaffID(int Value){
-        this.StaffID = Value;
-    }
-    public int getStaffID(){
-        return StaffID;
+    public Staff(int staffId, String firstName, String middleName, String lastName, String permissionLevel) {
+        this.staffId = staffId;
+        this.name = new Name(firstName, middleName, lastName);
+        this.permissionLevel = permissionLevel;
     }
 
-    public void setName(Name name){
-        this.name = name;
-    }
-    public String getName(){
-        return this.name.toString();
+    public int getStaffId() {
+        return staffId;
     }
 
-    public String toString() {
-        return StaffID + name.toString();
+    public Name getName() {
+        return name;
+    }
+
+    public String getPermissionLevel() {
+        return permissionLevel;
     }
 }

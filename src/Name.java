@@ -15,7 +15,6 @@ public class Name {
     }
 
     public String toString() {
-        return firstName + middleName + surname
-                ;
+        return firstName + middleName + surname;
     }
 }

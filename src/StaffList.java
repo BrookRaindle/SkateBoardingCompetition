@@ -1,21 +1,22 @@
 import java.util.ArrayList;
 
 public class StaffList {
-    
-    public ArrayList<Staff> allStaff;
+    private ArrayList<Staff> staffList;
 
-    public StaffList(){
-        this.allStaff = new ArrayList<Staff>();
+    public StaffList() {
+        this.staffList = new ArrayList<>();
     }
 
-    public void addToStaffList(Staff e){
-        this.allStaff.add(e);
-
+    public void addStaff(Staff staff) {
+        staffList.add(staff);
     }
 
-
-
-
-
-
+    public Staff findStaffById(int staffId) {
+        for (Staff staff : staffList) {
+            if (staff.getStaffId() == staffId) {
+                return staff;
+            }
+        }
+        return null; // Return null if no match is found
+    }
 }

@@ -31,8 +31,8 @@ public class Competition {
 
     public void addScores(String c){  
 
-        Score score = new Score();
-        this.scores.;
+        Score score = new Score(c);
+        
     
     }
 }
