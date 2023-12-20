@@ -19,4 +19,13 @@ public class CompetitorList {
         }
         return null; // Return null if no match is found
     }
+
+    public void add(Competitor competitor) {
+        competitorList.add(competitor);
+    }
+
+    public void remove(Competitor competitor) {
+        competitorList.remove(competitor);
+    }
+
 }

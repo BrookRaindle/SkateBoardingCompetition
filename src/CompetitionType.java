@@ -1,6 +1,6 @@
 public enum CompetitionType
 {
-    MenStreet(" Mens Street"), MenPark(" Mens Park"), WomanStreet(" Womens Street"), WomanPark(" Womans Park") ;
+    Surfing(" Surfing"), Skating(" Skating");
     private String type;
     
     private CompetitionType(String ty){
