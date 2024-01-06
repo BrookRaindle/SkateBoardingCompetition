@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Manager {
@@ -22,7 +25,7 @@ public class Manager {
 
         if (competitor != null) {
             System.out.println("Logged in as: " + competitor.getName());
-            launchCompetitorInterface(competitor, competitorList);
+            launchCompetitorInterface(competitionList ,competitor, competitorList);
         } 
         else if (staff != null) {
             if (staff.getPermissionLevel().equals("Official")) {
@@ -37,116 +40,168 @@ public class Manager {
         }
     }
 
-    private static Staff findStaffById(int id, StaffList staffList) {
-        for (Staff staff : staffList) {
-            if (staff.getStaffId() == id) {
-                return staff;
-            }
-        }
-        return null; // If no staff with the given ID is found
-    }
 
-    private static Competitor createCompetitor(int compNum,int competitorType, String name, String country, String level, int age) {
+    public static Competitor createCompetitor() {
+        try{
+        System.out.println("Creating a new competitor:");
+
+        System.out.print("Enter competitor number: ");
+        int competitorNumber = scanner.nextInt();
+
+        System.out.print("Enter competitor name: ");
+        String name = scanner.next();
+        name += scanner.next();
+
+        System.out.print("Enter competitor country: ");
+        String country = scanner.next();
+
+        System.out.print("Enter competitor gender: ");
+        String gender = scanner.next();
+
+        System.out.print("Enter competitor Level: ");
+        String level = scanner.next();
+
+        System.out.print("Enter competitor age: ");
+        int age = scanner.nextInt();
+
+        // Input scores
+
+        int competitorType;
+        do {
+            System.out.println("Choose competitor type:");
+            System.out.println("1. Surfer");
+            System.out.println("2. Skater");
+            competitorType = scanner.nextInt();
+        } while (competitorType != 1 && competitorType != 2);
+                                     
+        return createCompetitor(competitorType, competitorNumber, name, country, gender, 0, 0, 0, 0, level, age);
+    } catch(java.util.InputMismatchException e) {
+        System.out.println("Invalid input. Please enter a Numerical value.");
+        scanner.next(); 
+        return null;}
+}
+
+    private static Competitor createCompetitor(int competitorType, int competitorNumber, String name, String country, String gender,
+                                               int score1, int score2, int score3, int score4, String level, int age) {
         switch (competitorType) {
             case 1:
-                return new Surfer(compNum ,name, country, level, age);
+                return new Surfer(competitorNumber, name, country, gender, score1, score2, score3, score4, level, age);
             case 2:
-                return new Skater(compNum, name, country, level, age);
+                return new Skater(competitorNumber, name, country, gender, score1, score2, score3, score4, level, age);
             default:
-                System.out.println("Invalid competitor type, returning to menu");
-                return null;
-        }
+                System.out.println("Invalid competitor type.");
+                return new Surfer(competitorNumber, name, country, gender, score1, score2, score3, score4, level, age);
+    }
+}
+
+    private static void buildCompetitions(CompetitionList competitionList){
+        Competition SkateComp = new Competition("The Big Skate", "Moon Stadium", "25/02/2024");
+        competitionList.addToCompetitionList(SkateComp);
+        Competition SurfComp = new Competition("BigBooGaloo", "Corfue Beach", "13/01/2024");
+        competitionList.addToCompetitionList(SurfComp);
     }
 
-    private static void buildCompetitors(CompetitorList competitorList) {
-        competitorList.addCompetitor(new Surfer(12345, "Liam Rodriguez", "United States", "Amateur", 34));
-        competitorList.addCompetitor(new Surfer(23456, "Olivia Monroe", "Germany", "Amateur", 41));
-        competitorList.addCompetitor(new Surfer(34567, "Ethan Sullivan", "United Kingdom", "Amateur", 27));
-        competitorList.addCompetitor(new Surfer(45678, "Ava Martinez", "Germany", "Amateur", 72));
-        competitorList.addCompetitor(new Surfer(56789, "Jackson Harper", "United Kingdom", "Amateur", 19));
-        competitorList.addCompetitor(new Surfer(67890, "Sophia Valencia", "Japan", "Amateur", 45));
-        competitorList.addCompetitor(new Surfer(78901, "Noah Harrison", "United States", "Amateur", 23));
-        competitorList.addCompetitor(new Surfer(89012, "Isabella Chang", "United Kingdom", "Amateur", 25));
-        competitorList.addCompetitor(new Surfer(90123, "Mia Patel", "Japan", "Amateur", 34));
-        competitorList.addCompetitor(new Surfer(01234, "Lucas Malone", "Japan", "Amateur", 27));
+    private static void buildCompetitorsFromFile(CompetitorList competitorList, CompetitionList competitionList) {
+        try (BufferedReader br = new BufferedReader(new FileReader("SkateBoardingCompetition/src/CompetitorData.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tokens = line.split(" ");
+                int compNum = Integer.parseInt(tokens[0]);
+                String name = tokens[1] + " " + tokens[2];
+                String type = tokens[3];
+                String gender = tokens[5];
+                int age = Integer.parseInt(tokens[4]);
+                String country = tokens[6];
+                Competitor competitor;
+
+                if (type.equals("Skater")) {
+                    competitor = new Skater(compNum, name, country, gender,
+                            Integer.parseInt(tokens[7]), Integer.parseInt(tokens[8]),
+                            Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10]), "Amateur", age);
+                    competitionList.findCompetitionByName("The Big Skate").addCompetitor(competitor);
+                } else if (type.equals("Surfer")) {
+                    competitor = new Surfer(compNum, name, country, gender,
+                            Integer.parseInt(tokens[7]), Integer.parseInt(tokens[8]),
+                            Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10]), "Amateur", age);
+                    competitionList.findCompetitionByName("BigBooGaloo").addCompetitor(competitor);
+                } else {
+                    System.out.println("Invalid competitor type: " + type);
+                    continue; // Skip invalid entries
+                }
+
+                competitorList.addCompetitor(competitor);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void buildStaff(StaffList staffList){
-        staffList.addStaff(new Official(24650, "Caleb", "Thompson","Staff"));
-        staffList.addStaff(new Staff(81094, "Stella", "", "Mitchell"));
-        staffList.addStaff(new Staff(87429, "Mason", "", "Williams"));
-        staffList.addStaff(new Staff(56213, "Scarlett", "", "Bennett"));
-        staffList.addStaff(new Staff(93781, "Grace", "", "Cooper"));
+        staffList.addStaff(new Official(201, "Caleb", "Thompson","Staff"));
+        staffList.addStaff(new Staff(202, "Stella", "", "Mitchell"));
+        staffList.addStaff(new Staff(203, "Mason", "", "Williams"));
+        staffList.addStaff(new Staff(204, "Scarlett", "", "Bennett"));
+        staffList.addStaff(new Staff(205, "Grace", "", "Cooper"));
     }
 
-    private static void launchRegistrationInterface(CompetitorList competitorList){
+    private static void launchRegistrationInterface(CompetitorList competitorList, CompetitionList competitionList){
             System.out.println("\n" + //
                     "Registration process:");
     
-            System.out.print("Enter your name: ");
-            String name = scanner.next(); // Assuming a single-word name for simplicity
-    
-            System.out.print("Enter your country: ");
-            String country = scanner.next();
-    
-            System.out.print("Choose your level (Novice, Intermediate, Advanced, Expert, Professional): ");
-            String level = scanner.next();
-    
-            System.out.print("Enter your age: ");
-            int age = scanner.nextInt();
-
-            System.out.print("Enter Desired 5 Digit Login number:");
-            int compNum = scanner.nextInt();
-            while(competitorList.findCompetitorById(compNum) != null){
-                System.out.print("Sorry, That number is unavailable, try another number:");
-                compNum = scanner.nextInt();
-            }
-    
-            System.out.print("Choose your type (1. Surfer, 2. Skater): ");
-            int competitorType = scanner.nextInt();
-    
-            Competitor competitor = createCompetitor(compNum, competitorType, name, country, level, age);
+            Competitor competitor = createCompetitor();
             competitorList.addCompetitor(competitor);
     
             System.out.println("Registration successful!");
-            launchCompetitorInterface(competitor, competitorList);
+            launchCompetitorInterface(competitionList ,competitor, competitorList);
         }
 
-
-    private static void launchCompetitorInterface(Competitor competitor, CompetitorList competitorList) {
+    private static void launchCompetitorInterface(CompetitionList competitionList ,Competitor competitor, CompetitorList competitorList) {
         int choice;
         do {
-            System.out.println("\n" + //
+            System.out.println("\n" + 
                     "Choose an option:");
-            System.out.println("1. Register for new Competition");
+            System.out.println("1. View Competition");
             System.out.println("2. Competitor Profile");
-            System.out.println("3. Return to menu");
+            System.out.println("3. View summary");
+            System.out.println("4. Check Scores");
+            System.out.println("5. Log Out.");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
+                    System.out.print("\n");
+                    System.out.println("Enter competition name:");
+                    String comp = scanner.next();
+                    System.out.println(competitionList.getCompetitionString(competitionList.findCompetitionByName(comp)));
                     break;
                 case 2:
+                    System.out.print("\n");
                     System.out.println(competitor.getFullDetails());
                     break;
                 case 3:
-                    System.out.println("Exiting the program. Goodbye!");
+                System.out.print("\n");
+                    System.out.println(competitor.getShortDetails());
+                    break;
+                case 4:
+                System.out.print("\n");
+                    System.out.println(competitor.getAllScores());
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        }while (choice != 3);
+        }while (choice != 5);
     }
 
     private static void launchStaffInterface(Staff staff, CompetitorList competitorList, StaffList staffList) {
         int choice;
         do {
-            System.out.println("\\n" + //
+            System.out.println("\n" + 
                     "Choose an option:");
             System.out.println("1. Add Score");
-            System.out.println("2. Register Competitor Late");
-            System.out.println("3. Start New Competition");
+            System.out.println("2. View Competitor");
+            System.out.println("3. View Competition");
+            System.out.println("4. Log Out.");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
@@ -169,50 +224,138 @@ public class Manager {
     private void launchOfficialInterface(Official staff, CompetitorList competitorList, StaffList staffList) {
         int choice;
         do {
-            System.out.println("\\n" + //
+            System.out.println("\n" + //
                     "Choose an option:");
             System.out.println("1. Add Score");
             System.out.println("2. Register Competitor Late");
-            System.out.println("3. Start New Competition");
+            System.out.println("3. Remove Competitor");
+            System.out.println("4. View Competitor Information");
+            System.out.println("5. View Competition Details");
+            System.out.println("6. View All Competitors");
+
+
+            System.out.println("7. Ammend Competitor Details");
+            System.out.println("8. Log Out.");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
-                    
+                    System.out.println("Enter ID of the Competitor:");
+                    int ID = scanner.nextInt();
+                    Competitor comp = competitorList.findCompetitorById(ID);
+                    System.out.print("Enter the score value: ");
+                    int score = scanner.nextInt();
+                    System.out.print("Enter the Score index: ");
+                    int Temp = scanner.nextInt();
+                    switch (Temp) {
+                        case 1:
+                            comp.setScore1(score);
+                            break;
+                        case 2:
+                            comp.setScore2(score);
+                            break;
+                        case 3:
+                            comp.setScore3(score);
+                            break;
+                        case 4:
+                            comp.setScore4(score);
+                            break;
+                        default: 
+                            break;
+                    }
                     break;
                 case 2:
                     staff.registerCompetitor();
                     break;
                 case 3:
-                    staff.createNewCompetition();
+                    System.out.println("Please enter the ID number of the Competitor you would like to remove: ");
+                    int id = scanner.nextInt();
+                    staff.removeCompetitor(competitorList, id);
                     break;
+                case 4:
+                    System.out.println("Enter the id of the Competitor you would like to view:");
+                    int cmp = scanner.nextInt();
+                    System.out.println(competitorList.findCompetitorById(cmp).getFullDetails());    
+                break;
+                case 5:
+                    System.out.print("\n");
+                    System.out.println("Enter competition name:");
+                    String cmp2 = scanner.next();
+                    System.out.println(competitionList.getCompetitionString(competitionList.findCompetitionByName(cmp2)));
+                    break;
+                case 6:
+                    System.out.println("Retrieving All Competitor Profiles . . . ");
+                    System.out.println(competitorList.displayCompetitorsById());
+                    break;
+                case 7:
+                    System.out.println("Please enter the ID Number of the Competitor whos Details you would like to change:");
+                    int IDD = scanner.nextInt();
+                    Competitor compet = competitorList.findCompetitorById(IDD);
+
+                    System.out.println("Please enter the Type of Detail of the Competitor you would like to change: ");
+                    System.out.println("1. Name");
+                    System.out.println("2. Country");
+                    System.out.println("3. Gender");
+                    System.out.println("4. Age");
+                    System.out.println("5. Level");
+                    int DetChoice = scanner.nextInt();
+                    switch(DetChoice){
+                        case 1:
+                            System.out.println("Please enter the new Name: ");
+                            String newname = scanner.next();
+                            compet.setName(newname);
+                            break;
+                        case 2:
+                            System.out.println("Please enter the new Country: ");
+                            String newcountry = scanner.next();
+                            compet.setCountry(newcountry);
+                            break;
+                        case 3:
+                            System.out.println("Please enter the new Gender: ");
+                            String newgender = scanner.next();
+                            compet.setGender(newgender);
+                            break;
+                        case 4:
+                            System.out.println("Please enter the new Age: ");
+                            int newage = scanner.nextInt();
+                            compet.setAge(newage);
+                            break;
+                        case 5:
+                            System.out.println("Please enter the new skill level: ");
+                            String newlevel = scanner.next();
+                            compet.setLevel(newlevel);
+                            break;
+                        
+                    }
+                        break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 3);}
+        } while (choice != 8);}
 
     private void runProgram() {
         int choice;
-        buildCompetitors(competitorList);
+        buildCompetitions(competitionList);
+        buildCompetitorsFromFile(competitorList, competitionList);
         buildStaff(staffList);
 
         do {
-            System.out.println("Choose an option:");
-            System.out.println("1. Login");
-            System.out.println("2. Register for a new competition");
-            System.out.println("3. View all competitions");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-
-
+            try {
+                System.out.println("Choose an option:");
+                System.out.println("1. Login");
+                System.out.println("2. Register for a new competition");
+                System.out.println("3. View all competitions");
+                System.out.println("4. Exit");
+                System.out.print("Enter your choice: ");
+                choice = scanner.nextInt();
+    
             switch (choice) {
                 case 1:
                     login(competitorList, staffList);
                     break;
                 case 2:
-                    launchRegistrationInterface(competitorList);
+                    launchRegistrationInterface(competitorList, competitionList);
                     break;
                 case 3:
                     viewAllCompetitions();
@@ -223,6 +366,12 @@ public class Manager {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
+              } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid choice.");
+                scanner.next();
+                choice = 0;}
+
+
         } while (choice != 4);
     }
 }

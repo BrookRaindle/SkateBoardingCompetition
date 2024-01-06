@@ -6,7 +6,7 @@ class Staff {
     private Name name;
     private String permissionLevel;
 
-    private static List<Competition> allCompetitions = new ArrayList<>();
+    public static List<Competition> allCompetitions = new ArrayList<>();
 
     public Staff(int staffId, String firstName, String middleName, String lastName) {
         this.staffId = staffId;
@@ -40,7 +40,7 @@ class Staff {
     public Name getName() {
         return name;
     }
-
+    
     public String getPermissionLevel() {
         return permissionLevel;
     }
