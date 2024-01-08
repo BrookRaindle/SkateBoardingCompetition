@@ -92,6 +92,14 @@ public abstract class Competitor {
        return s;
     }
 
+    public int getMaxIndividualScore() {
+        return Math.max(Math.max(score1, score2), Math.max(score3, score4));
+    }
+
+    public int getMinIndividualScore() {
+        return Math.min(Math.min(score1, score2), Math.min(score3, score4));
+    }
+
     public String getShortDetails() {
         String s = "Competitor number: " + competitorNumber + "\nName: " + name + " Country: " + country;
         return s;

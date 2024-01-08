@@ -1,16 +1,18 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
 
-public class Manager {
+public class UIManager {
     private static Scanner scanner = new Scanner(System.in);
     private CompetitorList competitorList = new CompetitorList();
     private StaffList staffList = new StaffList();
     private CompetitionList competitionList = new CompetitionList();
 
     public static void main(String[] args) {
-        Manager manager = new Manager();  // Create an instance of Manager
+        UIManager manager = new UIManager();  // Create an instance of Manager
         manager.runProgram();  // Call the instance method to run the program
     }
 
@@ -32,7 +34,7 @@ public class Manager {
                 launchOfficialInterface((Official) staff, competitorList, staffList);
             } else {
                 System.out.println("Logged in as: " + staff.getName());
-                launchStaffInterface(staff, competitorList, staffList);
+                launchStaffInterface(staff, competitorList, staffList, competitionList);
                 // Additional actions for logged-in user can be added here
             }
         } else {
@@ -78,8 +80,7 @@ public class Manager {
     } catch(java.util.InputMismatchException e) {
         System.out.println("Invalid input. Please enter a Numerical value.");
         scanner.next(); 
-        return null;}
-}
+        return null;}}
 
     private static Competitor createCompetitor(int competitorType, int competitorNumber, String name, String country, String gender,
                                                int score1, int score2, int score3, int score4, String level, int age) {
@@ -193,7 +194,7 @@ public class Manager {
         }while (choice != 5);
     }
 
-    private static void launchStaffInterface(Staff staff, CompetitorList competitorList, StaffList staffList) {
+    private static void launchStaffInterface(Staff staff, CompetitorList competitorList, StaffList staffList, CompetitionList competitionList) {
         int choice;
         do {
             System.out.println("\n" + 
@@ -207,18 +208,45 @@ public class Manager {
 
             switch (choice) {
                 case 1:
-                    
+                    System.out.println("Enter ID of the Competitor:");
+                    int ID = scanner.nextInt();
+                    Competitor comp = competitorList.findCompetitorById(ID);
+                    System.out.print("Enter the score value: ");
+                    int score = scanner.nextInt();
+                    System.out.print("Enter the Score index: ");
+                    int Temp = scanner.nextInt();
+                    switch (Temp) {
+                        case 1:
+                            comp.setScore1(score);
+                            break;
+                        case 2:
+                            comp.setScore2(score);
+                            break;
+                        case 3:
+                            comp.setScore3(score);
+                            break;
+                        case 4:
+                            comp.setScore4(score);
+                            break;
+                        default: 
+                            break;
+                    }
                     break;
                 case 2:
-                    
+                    System.out.println("Enter the id of the Competitor you would like to view:");
+                    int cmp = scanner.nextInt();
+                    System.out.println(competitorList.findCompetitorById(cmp).getFullDetails());    
                     break;
                 case 3:
-                    staff.createNewCompetition();
+                    System.out.print("\n");
+                    System.out.println("Enter competition name:");
+                    String comp3 = scanner.next();
+                    System.out.println(competitionList.getCompetitionString(competitionList.findCompetitionByName(comp3)));
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 3);
+        } while (choice != 4);
     }
 
     private void launchOfficialInterface(Official staff, CompetitorList competitorList, StaffList staffList) {
@@ -232,8 +260,6 @@ public class Manager {
             System.out.println("4. View Competitor Information");
             System.out.println("5. View Competition Details");
             System.out.println("6. View All Competitors");
-
-
             System.out.println("7. Ammend Competitor Details");
             System.out.println("8. Log Out.");
             System.out.print("Enter your choice: ");
@@ -326,7 +352,6 @@ public class Manager {
                             String newlevel = scanner.next();
                             compet.setLevel(newlevel);
                             break;
-                        
                     }
                         break;
                 default:
@@ -361,6 +386,7 @@ public class Manager {
                     viewAllCompetitions();
                     break;
                 case 4:
+                    saveInformationToFile(competitorList);
                     System.out.println("Exiting the program. Goodbye!");
                     break;
                 default:
@@ -371,7 +397,39 @@ public class Manager {
                 scanner.next();
                 choice = 0;}
 
-
         } while (choice != 4);
+    }
+
+    private void saveInformationToFile(CompetitorList competitorList) {
+        try (FileWriter writer = new FileWriter("competitor_information.txt")) {
+            // Save a table of competitors with full details
+            writer.write("Competitors:\n");
+            for (Competitor competitor : competitorList.getCompetitors()) {
+                writer.write(competitor.getFullDetails() + "\n");
+            }
+
+            // Save details of the competitor with the highest overall score
+            Competitor maxScoreCompetitor = competitorList.getTop3Contestants().get(0);
+            writer.write("\nCompetitor with the highest overall score:\n");
+            writer.write(maxScoreCompetitor.getFullDetails() + "\n");
+
+            // Save four other summary statistics (totals, averages, max, min of scores)
+            writer.write("\nSummary Statistics:\n");
+            writer.write("Total Scores: " + competitorList.getTotalScores() + "\n");
+            writer.write("Average Score: " + competitorList.getAverageScore() + "\n");
+            writer.write("Max Score: " + competitorList.getMaxScore() + "\n");
+            writer.write("Min Score: " + competitorList.getMinScore() + "\n");
+
+            // Save frequency report (individual score awards)
+            Map<Integer, Integer> scoreFrequencyMap = competitorList.getScoreFrequency();
+            writer.write("\nScore Frequency Report:\n");
+            for (Map.Entry<Integer, Integer> entry : scoreFrequencyMap.entrySet()) {
+                writer.write("Score " + entry.getKey() + ": " + entry.getValue() + " times\n");
+            }
+
+            System.out.println("Information saved to competitor_information.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,0 +1,84 @@
+Competitors:
+Competitor number: 100
+Name: Ann Athen Country: UK
+Ann Athen is a Female aged 23 and has an overall score of: 17
+Competitor number: 101
+Name: George Beth Country: UK
+George Beth is a Male aged 31 and has an overall score of: 18
+Competitor number: 102
+Name: Kaith Andy Country: UK
+Kaith Andy is a Female aged 29 and has an overall score of: 15
+Competitor number: 103
+Name: Rinon Grov Country: US
+Rinon Grov is a Male aged 25 and has an overall score of: 10
+Competitor number: 104
+Name: Mark Leno Country: UK
+Mark Leno is a Male aged 22 and has an overall score of: 10
+Competitor number: 105
+Name: Harry Patrick Country: UK
+Harry Patrick is a Male aged 32 and has an overall score of: 21
+Competitor number: 106
+Name: Vicy Mathew Country: UK
+Vicy Mathew is a Male aged 33 and has an overall score of: 10
+Competitor number: 107
+Name: Monica Loy Country: US
+Monica Loy is a Female aged 29 and has an overall score of: 10
+Competitor number: 108
+Name: Susan Mathew Country: US
+Susan Mathew is a Female aged 28 and has an overall score of: 10
+Competitor number: 109
+Name: Andy Stov Country: US
+Andy Stov is a Female aged 22 and has an overall score of: 23
+Competitor number: 110
+Name: Mary Francis Country: UK
+Mary Francis is a Male aged 27 and has an overall score of: 10
+Competitor number: 111
+Name: Jomon Vicy Country: UK
+Jomon Vicy is a Male aged 22 and has an overall score of: 10
+Competitor number: 112
+Name: Catherin George Country: UAE
+Catherin George is a Male aged 20 and has an overall score of: 11
+Competitor number: 113
+Name: Aby Mathew Country: UK
+Aby Mathew is a Male aged 34 and has an overall score of: 10
+Competitor number: 114
+Name: Jojo Mony Country: UK
+Jojo Mony is a Male aged 31 and has an overall score of: 10
+Competitor number: 115
+Name: Methen George Country: UK
+Methen George is a Male aged 30 and has an overall score of: 26
+Competitor number: 116
+Name: Scarlett John Country: UK
+Scarlett John is a Female aged 25 and has an overall score of: 10
+Competitor number: 117
+Name: Patrick Shanon Country: US
+Patrick Shanon is a Male aged 22 and has an overall score of: 32
+Competitor number: 118
+Name: Rod Stod Country: UK
+Rod Stod is a Male aged 26 and has an overall score of: 10
+Competitor number: 119
+Name: Lijo Willams Country: UK
+Lijo Willams is a Male aged 28 and has an overall score of: 10
+
+Competitor with the highest overall score:
+Competitor number: 111
+Name: Jomon Vicy Country: UK
+Jomon Vicy is a Male aged 22 and has an overall score of: 10
+
+Summary Statistics:
+Total Scores: 409
+Average Score: 20.45
+Max Score: Competitor with the highest individual score: Jomon Vicy
+Min Score: Competitor with the lowest individual score: Ann Athen
+
+Score Frequency Report:
+Score 1: 4 times
+Score 2: 14 times
+Score 3: 4 times
+Score 4: 10 times
+Score 5: 13 times
+Score 6: 13 times
+Score 7: 7 times
+Score 8: 4 times
+Score 9: 9 times
+Score 10: 2 times
