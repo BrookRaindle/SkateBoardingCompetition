@@ -125,6 +125,7 @@ public class CompetitorInterface {
         }
     }
     private void handleLogoutButtonClick() {
+        manager.saveInformationToFile(manager.getCompetitorList());
         frame.dispose();
     }
 }

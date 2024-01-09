@@ -258,6 +258,7 @@ public class OfficialInterface {
     }
 
     private void handleLogOutButtonClick() {
+        manager.saveInformationToFile(manager.getCompetitorList());
         frame.dispose();
     }
 }

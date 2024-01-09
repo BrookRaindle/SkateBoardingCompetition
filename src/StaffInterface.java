@@ -124,6 +124,7 @@ public class StaffInterface {
     }
 
     private void handleLogOutButtonClick() {
+        manager.saveInformationToFile(manager.getCompetitorList());
         frame.dispose();
     }
 }
