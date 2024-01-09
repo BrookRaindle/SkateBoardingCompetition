@@ -1,13 +1,27 @@
 import javax.swing.*;
+
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Gui {
-    private JFrame frame;
-    private JButton loginButton;
-    private JButton registerButton;
-    private JButton viewCompetitionButton;
-    private JButton exitButton;
+    public JFrame frame;
+    public JButton loginButton;
+    public JButton registerButton;
+    public JButton viewCompetitionButton;
+    public JButton exitButton;
+    public Manager manager = new Manager();
+    public CompetitorList competitorList = manager.getCompetitorList();
+    public StaffList staffList = manager.getStaffList();
+    public CompetitionList competitionList = manager.getCompetitionList();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Gui().display();
+            }
+        });
+    }
 
     public Gui() {
         frame = new JFrame("Main Menu");
@@ -61,49 +75,104 @@ public class Gui {
     }
 
     private void handleLoginButtonClick() {
-        // Implement login functionality here
         String userID = JOptionPane.showInputDialog(frame, "Enter your user ID:");
         if (userID != null && !userID.isEmpty()) {
             int userId = Integer.parseInt(userID);
-            // Use the entered user ID to determine the user type and launch the corresponding interface
-            // For simplicity, we assume the user ID is enough to identify the user type.
-            launchUserInterface(userId);
+            Competitor competitor = manager.getCompetitorById(userId);
+            Staff staff = manager.getStaffById(userId);
+            if (competitor != null) {
+                System.out.println("Logged in as: " + competitor.getName());
+                    launchCompetitorInterface(competitor);
+            } else if (staff != null) {
+                System.out.println("Logged in as: " + staff.getName());
+                if (staff instanceof Official) {
+                    //launchOfficialInterface((Official) staff, manager);
+                } else {
+                    //launchStaffInterface(staff);
+                }
         } else {
             JOptionPane.showMessageDialog(frame, "Invalid user ID. Please enter a valid ID.");
         }
     }
-
+    }
+    
+    private void launchCompetitorInterface(Competitor competitor) {
+        CompetitorInterface competitorInterface = new CompetitorInterface(competitor, manager);
+        competitorInterface.display();
+        frame.dispose();
+    }
     private void handleRegisterButtonClick() {
-        // Implement register functionality here
-        // You may want to create a registration dialog or navigate to another frame
-        // for user input.
-        JOptionPane.showMessageDialog(frame, "Register functionality not implemented.");
-    }
+        JFrame registerFrame = new JFrame("Register Competitor");
+        registerFrame.setSize(400, 300);
+        registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    private void handleViewCompetitionButtonClick() {
-        // Implement view competition functionality here
-        // You may want to create a dialog to select a competition and display its details.
-        JOptionPane.showMessageDialog(frame, "View Competition functionality not implemented.");
-    }
+        JPanel panel = new JPanel(new GridLayout(7, 2));
 
-    private void launchUserInterface(int userId) {
-        // Use the user ID to determine the user type and launch the corresponding interface
-        // This is a placeholder. You need to replace it with your actual logic.
-        // For simplicity, we assume that user IDs starting with 1 are competitors, 2 are staff, and 3 are officials.
-        if (userId >= 1 && userId <= 3) {
-            JOptionPane.showMessageDialog(frame, "Launching user interface for user ID: " + userId);
-            // Implement logic to open the corresponding user interface based on the user type
-        } else {
-            JOptionPane.showMessageDialog(frame, "Invalid user ID. Unable to determine user type.");
-        }
-    }
+        JTextField nameField = new JTextField();
+        JTextField countryField = new JTextField();
+        JTextField genderField = new JTextField();
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
+        JComboBox<String> skillLevelComboBox = new JComboBox<>(new String[]{"Beginner", "Intermediate", "Pro"});
+
+        JTextField ageField = new JTextField();
+
+        JComboBox<String> competitorTypeComboBox = new JComboBox<>(new String[]{"Surfer", "Skater"});
+
+        JButton confirmButton = new JButton("Confirm");
+
+        panel.add(new JLabel("Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Country:"));
+        panel.add(countryField);
+        panel.add(new JLabel("Gender:"));
+        panel.add(genderField);
+        panel.add(new JLabel("Skill Level:"));
+        panel.add(skillLevelComboBox);
+        panel.add(new JLabel("Age:"));
+        panel.add(ageField);
+        panel.add(new JLabel("Competitor Type:"));
+        panel.add(competitorTypeComboBox);
+        panel.add(confirmButton);
+
+        registerFrame.add(panel);
+
+        confirmButton.addActionListener(new ActionListener() {
             @Override
-            public void run() {
-                new Gui().display();
+            public void actionPerformed(ActionEvent e) {
+
+                String name = nameField.getText();
+
+                String country = countryField.getText();
+
+                String gender = genderField.getText();
+
+                String skillLevel = (String) skillLevelComboBox.getSelectedItem();
+
+                int age = Integer.parseInt(ageField.getText());
+
+                int competitorType = 0;
+
+                String selectedType = (String) competitorTypeComboBox.getSelectedItem();
+                if ("Surfer".equals(selectedType)) {
+                    competitorType = 1;} 
+                else if ("Skater".equals(selectedType)) {
+                    competitorType = 2;} 
+                
+                int competitorNumber = competitorList.getHighestID() + 1;
+                manager.registerCompetitorLate(competitorType, competitorNumber, name, country, gender, 0, 0, 0, 0, skillLevel, age);
+
+                JOptionPane.showMessageDialog(registerFrame, "Competitor registered successfully!");
+
+                launchCompetitorInterface(manager.getCompetitorById(competitorNumber));
+                registerFrame.dispose();
             }
         });
+
+        registerFrame.setVisible(true);
+    }
+
+
+    private void handleViewCompetitionButtonClick() {
+                JOptionPane.showMessageDialog(frame, "View Competition functionality not implemented.");
     }
 }
