@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompetitorList {
+
     private ArrayList<Competitor> competitorList;
 
     public CompetitorList() {
@@ -19,6 +20,9 @@ public class CompetitorList {
     public void addCompetitor(Competitor competitor) {
         competitorList.add(competitor);
     }
+    public void add(Competitor competitor){
+        competitorList.add(competitor);
+    }
 
     public Competitor findCompetitorById(int competitorNumber) {
         for (Competitor competitor : competitorList) {
@@ -29,12 +33,19 @@ public class CompetitorList {
         return null; // Return null if no match is found
     }
 
-    public void add(Competitor competitor) {
-        competitorList.add(competitor);
-    }
-
     public void remove(Competitor competitor) {
         competitorList.remove(competitor);
+    }
+
+    public int getHighestID() {
+        if (competitorList.isEmpty()) {
+            return -1; // Return -1 if the list is empty
+        }
+
+        return competitorList.stream()
+                .max(Comparator.comparingInt(Competitor::getCompetitorNumber))
+                .map(Competitor::getCompetitorNumber)
+                .orElse(-1);
     }
 
     public String getMinScore() {
