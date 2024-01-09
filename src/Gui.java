@@ -14,6 +14,8 @@ public class Gui {
     public CompetitorList competitorList = manager.getCompetitorList();
     public StaffList staffList = manager.getStaffList();
     public CompetitionList competitionList = manager.getCompetitionList();
+
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -27,7 +29,7 @@ public class Gui {
         frame = new JFrame("Main Menu");
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        manager.init();
         loginButton = new JButton("Login");
         registerButton = new JButton("Register");
         viewCompetitionButton = new JButton("View Competition");
@@ -86,9 +88,9 @@ public class Gui {
             } else if (staff != null) {
                 System.out.println("Logged in as: " + staff.getName());
                 if (staff instanceof Official) {
-                    //launchOfficialInterface((Official) staff, manager);
+                    launchOfficialInterface((Official) staff);
                 } else {
-                    //launchStaffInterface(staff);
+                    launchStaffInterface(staff);
                 }
         } else {
             JOptionPane.showMessageDialog(frame, "Invalid user ID. Please enter a valid ID.");
@@ -96,6 +98,19 @@ public class Gui {
     }
     }
     
+
+    private void launchOfficialInterface(Official staff){
+        OfficialInterface officialInterface = new OfficialInterface(staff, manager);
+        officialInterface.display();
+        frame.dispose();
+    }
+
+    private void launchStaffInterface(Staff staff){ 
+        StaffInterface staffInterface = new StaffInterface(staff, manager);
+        staffInterface.display();
+        frame.dispose();
+    }
+
     private void launchCompetitorInterface(Competitor competitor) {
         CompetitorInterface competitorInterface = new CompetitorInterface(competitor, manager);
         competitorInterface.display();

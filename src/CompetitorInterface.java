@@ -75,21 +75,55 @@ public class CompetitorInterface {
     }
 
     private void handleViewCompetitionButtonClick() {
-        JOptionPane.showMessageDialog(frame, "View Competition functionality for Competitor not implemented.");
+        String competitionName = JOptionPane.showInputDialog(frame, "Enter the name of the competition:");
+        if (competitionName != null && !competitionName.isEmpty()) {
+            String competitionDetails = manager.ViewCompetition(competitionName);
+            JOptionPane.showMessageDialog(frame, competitionDetails);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Invalid competition name. Please enter a valid name.");
+        }
     }
 
     private void handleViewProfileButtonClick() {
-        JOptionPane.showMessageDialog(frame, "View Profile functionality for Competitor not implemented.");
+        int competitorId = getCompetitorIdFromUser();
+        if (competitorId != -1) {
+            Competitor competitor = manager.getCompetitorById(competitorId);
+            if (competitor != null) {
+                String competitorDetails = manager.getCompetitorFullDetail(competitor);
+                JOptionPane.showMessageDialog(frame, competitorDetails);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Competitor not found with ID: " + competitorId);
+            }
+        }
     }
 
     private void handleViewSummaryButtonClick() {
-        JOptionPane.showMessageDialog(frame, "View Summary functionality for Competitor not implemented.");
+        String summary = manager.viewAllCompetitors();
+        JOptionPane.showMessageDialog(frame, summary);
     }
 
     private void handleCheckScoresButtonClick() {
-        JOptionPane.showMessageDialog(frame, "Check Scores functionality for Competitor not implemented.");
+        int competitorId = getCompetitorIdFromUser();
+        if (competitorId != -1) {
+            Competitor competitor = manager.getCompetitorById(competitorId);
+            if (competitor != null) {
+                String allScores = manager.getAllScores(competitor);
+                JOptionPane.showMessageDialog(frame, allScores);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Competitor not found with ID: " + competitorId);
+            }
+        }
     }
 
+    private int getCompetitorIdFromUser() {
+        String competitorID = JOptionPane.showInputDialog(frame, "Enter the ID of the competitor:");
+        if (competitorID != null && !competitorID.isEmpty()) {
+            return Integer.parseInt(competitorID);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Invalid competitor ID. Please enter a valid ID.");
+            return -1;
+        }
+    }
     private void handleLogoutButtonClick() {
         frame.dispose();
     }
